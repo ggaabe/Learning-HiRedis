@@ -16,7 +16,9 @@
 int main(int argc, char const *argv[])
 {
 	redisContext *context = malloc(sizeof(redisContext));
+	printf("%s\n", "Now setting up Database");
 	setupDB(context);
+	printf("%s\n", "Now generating numbers");
 	return generate(context);
 }
 
@@ -53,6 +55,7 @@ int generate(redisContext *newContext)
 {
 	for (int i = 0; i < 1000; ++i)
 	{
+		printf("%s %d\n", "Generated a new number, i is now", i);
 		updateDB(newContext, i);
 		usleep(400 * 1000 * (rand() % 20));
 	}
@@ -68,16 +71,25 @@ int generate(redisContext *newContext)
 char* updateDB(redisContext *newContext, int newValue)
 {
 	redisReply *reply;
-	char newStrValue[intStrLen(newValue)];
+	printf("%s\n", "got to here (updateDB)");
+	int newStrValueLength = intStrLen(newValue);
+	char newStrValue[newStrValueLength];
+	printf("%s\n", "got to there (updateDB)");
 	sprintf(newStrValue, "%d", newValue);
+
+	printf("%s %d %s %s%s\n", "The value", newValue, "was converted into the string", newStrValue, ". Running redisCommand.");
 
 	reply = redisCommand(
 		newContext,
 		"SET NumberGeneratorValue %b",
 		newStrValue,
-		(size_t) intStrLen(newValue));
+		(size_t) newStrValueLength);
+
+	printf("%s\n", "Redis command returned reply.");
+
 	char* result = reply->str;
 	freeReplyObject(reply);
+	printf("%s %s\n", "reply from server was", result);
 	return result;
 }
 
@@ -86,9 +98,12 @@ char* updateDB(redisContext *newContext, int newValue)
  */
 int intStrLen(int a) {
 	int result = 1;
-	for(;!(a > 0 && a < 9);) {
+	printf("a is initially %d, res is %d\n", a, result);
+	for(;!(a >= 0 && a <= 9);) {
+		printf("a is %d, res is %d\n", a, result);
 		result++;
 		a /= 10;
 	}
+	printf("%s %d\n", "intStrLen returning", result);
 	return result;
 }
