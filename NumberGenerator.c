@@ -84,8 +84,11 @@ char* updateDB(redisContext *newContext, int newValue)
 /**
  * returns the length of the string representation of the integer.
  */
-int intStrLen(int in)
-{
-	// printf("The String representation of '%d' is of length: %d", in, (int) (log10 ((double) in) + 1));
-	return (int) (log10 ((double) in) + 1);
+int intStrLen(int a) {
+	int result = 1;
+	for(;!(a > 0 && a < 9);) {
+		result++;
+		a /= 10;
+	}
+	return result;
 }
