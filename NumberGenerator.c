@@ -15,7 +15,7 @@
  */
 int main(int argc, char const *argv[])
 {
-	redisContext *context;
+	redisContext *context = malloc(sizeof(redisContext));
 	setupDB(context);
 	return generate(context);
 }
