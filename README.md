@@ -1,2 +1,1 @@
-# set a key on start function
-write result to a key everytime a new number is generated.
+We can use this to write to DB and read in real-time with nonblocking IO
